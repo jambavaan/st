@@ -1544,6 +1544,7 @@ tsetattr(const int *attr, int l)
 				term.c.attr.bg = idx;
 			break;
 		case 49:
+		case 59:
 			term.c.attr.bg = defaultbg;
 			break;
 		default:
@@ -1721,8 +1722,8 @@ csihandle(void)
 	switch (csiescseq.mode[0]) {
 	default:
 	unknown:
-		fprintf(stderr, "erresc: unknown csi ");
-		csidump();
+		// fprintf(stderr, "erresc: unknown csi ");
+		// csidump();
 		/* die(""); */
 		break;
 	case '@': /* ICH -- Insert <n> blank char */
