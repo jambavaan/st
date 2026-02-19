@@ -6,7 +6,7 @@
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
 static char *font = "JetBrainsMono Nerd Font :pixelsize=15:antialias=true:autohint=true";
-static char *font2[] = { "JetBrainsMono Nerd Font :pixelsize=15:antialias=true:autohint=true" };
+static char *font2[] = { "NotoColorEmoji:pixelsize=15:antialias=true:autohint=true" };
 static int borderpx = 0;
 
 /*
@@ -48,8 +48,8 @@ int allowaltscreen = 1;
  * near minlatency, but it waits longer for slow updates to avoid partial draw.
  * low minlatency will tear/flicker more, as it can "detect" idle too early.
  */
-static double minlatency = 8;
-static double maxlatency = 33;
+static double minlatency = 1;
+static double maxlatency = 8;
 
 /*
  * Synchronized-Update timeout in ms
@@ -114,7 +114,7 @@ char *termname = "st-256color";
 unsigned int tabspaces = 8;
 
 /* bg opacity */
-float alpha = 1.0;
+float alpha = 0.8;
 
 /* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
@@ -236,13 +236,13 @@ static MouseShortcut mshortcuts[] = {
 };
 
 /* Internal keyboard shortcuts. */
-#define MODKEY Mod1Mask
+#define MODKEY Mod4Mask
 #define TERMMOD (Mod4Mask|ShiftMask)
 
 MouseKey mkeys[] = {
   /* button               mask            function        argument */
-  { Button4,              XK_NO_MOD,       kscrollup,      {.i =  mousescrollincrement} },
-  { Button5,              XK_NO_MOD,       kscrolldown,    {.i =  mousescrollincrement} },
+  { Button4,              XK_NO_MOD,      kscrollup,      {.i =  mousescrollincrement} },
+  { Button5,              XK_NO_MOD,      kscrolldown,    {.i =  mousescrollincrement} },
   { Button4,              Mod4Mask,        zoom,           {.f =  +1} },
   { Button5,              Mod4Mask,        zoom,           {.f =  -1} },
 };
@@ -256,43 +256,40 @@ static char *copyurlcmd[] = { "/bin/sh", "-c",
 static char *copyoutput[] = { "/bin/sh", "-c", "st-copyout", "externalpipe", NULL };
 
 static Shortcut shortcuts[] = {
-  /* mask                     keysym          function        argument                    remarks*/
-  { MODKEY,                   XK_comma,       zoom,           {.f = +1} }, 
-  { MODKEY,                   XK_period,      zoom,           {.f = -1} },
-  { MODKEY,                   XK_g,           zoomreset,      {.f =  0} },
-  { MODKEY,                   XK_Num_Lock,    numlock,        {.i =  0} },
-  { MODKEY,                   XK_Page_Up,     kscrollup,      {.i = -1} },
-  { MODKEY,                   XK_Page_Down,   kscrolldown,    {.i = -1} },
-  { MODKEY,                   XK_k,           kscrollup,      {.i =  1} },
-  { MODKEY,                   XK_j,           kscrolldown,    {.i =  1} },
-  { MODKEY,                   XK_Up,          kscrollup,      {.i =  1} },
-  { MODKEY,                   XK_Down,        kscrolldown,    {.i =  1} },
-  { MODKEY,                   XK_u,           kscrollup,      {.i = -1} },
-  { MODKEY,                   XK_d,           kscrolldown,    {.i = -1} },
-  { MODKEY,                   XK_s,           changealpha,	  {.f = -0.05} },
-  { MODKEY,                   XK_a,           changealpha,	  {.f = +0.05} },
-  { MODKEY,                   XK_m,           changealpha,	  {.f = +2.00} },
-  { MODKEY,                   XK_l,           externalpipe,   {.v = openurlcmd } },
-  { MODKEY,                   XK_y,           externalpipe,   {.v = copyurlcmd } },
-  { MODKEY,                   XK_o,           externalpipe,   {.v = copyoutput } },
-  { XK_ANY_MOD,               XK_Break,       sendbreak,      {.i =  0} },
-  { XK_ANY_MOD,               XK_Print,       printsel,       {.i =  0} },
-  { XK_ANY_MOD,               Button2,	      selpaste,	      {.i =  0} },
-  { ShiftMask,                XK_Print,       printscreen,    {.i =  0} },
-  { ShiftMask,                XK_Page_Up,     kscrollup,      {.i = -1} },
-  { ShiftMask,                XK_Page_Down,   kscrolldown,    {.i = -1} },
-  { ShiftMask,                XK_Insert,      clippaste,      {.i =  0} },
-  { ControlMask,              XK_Print,       toggleprinter,  {.i =  0} },
-  { MODKEY | ShiftMask,       XK_C,           clipcopy,       {.i =  0} },
-  { MODKEY | ShiftMask,       XK_V,           clippaste,      {.i =  0} },
-  { ControlMask | ShiftMask,  XK_U,           iso14755,       {.i =  0} },
-  { TERMMOD,                  XK_Return,      newterm,        {.i =  0} },
-  { TERMMOD,                  XK_Up,          zoom,           {.f = +1} },
-  { TERMMOD,                  XK_Down,        zoom,           {.f = -1} },
-  { TERMMOD,                  XK_K,           zoom,           {.f = +1} },
-  { TERMMOD,                  XK_J,           zoom,           {.f = -1} },
-  { TERMMOD,                  XK_U,           zoom,           {.f = +2} },
-  { TERMMOD,                  XK_D,           zoom,           {.f = -2} },
+  /* mask                    keysym          function                               argument */
+
+  { MODKEY,                  XK_j,           zoom,                                 {.f = +1} },
+  { MODKEY,                  XK_k,           zoom,                                 {.f = -1} },
+  { MODKEY,                  XK_g,           zoomreset,                            {.f =  0} },
+  { MODKEY,                  XK_Num_Lock,    numlock,                              {.i =  0} },
+  { MODKEY,                  XK_u,           kscrollup,                            {.i = -1} },
+  { MODKEY,                  XK_d,           kscrolldown,                          {.i = -1} },
+  { MODKEY,                  XK_s,           changealpha,                       {.f = -0.05} },
+  { MODKEY,                  XK_a,           changealpha,                       {.f = +0.05} },
+  { MODKEY,                  XK_m,           changealpha,                       {.f = +2.00} },
+  { MODKEY,                  XK_y,           externalpipe,                {.v = copyoutput } },
+  { MODKEY,                  XK_o,           externalpipe,                {.v = openurlcmd } },
+  { MODKEY,                  XK_l,           externalpipe,                {.v = copyurlcmd } },
+
+  { MODKEY|ControlMask,      XK_Return,      newterm,                              {.i =  0} },
+  { TERMMOD,                 XK_Up,          zoom,                                 {.f = +1} },
+  { TERMMOD,                 XK_Down,        zoom,                                 {.f = -1} },
+  { TERMMOD,                 XK_k,           kscrollup,                            {.f = +1} },
+  { TERMMOD,                 XK_j,           kscrolldown,                          {.f = -1} },
+
+  { XK_ANY_MOD,              XK_Break,       sendbreak,                            {.i =  0} },
+  { XK_ANY_MOD,              XK_Print,       printsel,                             {.i =  0} },
+  { XK_ANY_MOD,              Button2,        selpaste,                             {.i =  0} },
+
+  { ControlMask,             XK_Print,       toggleprinter,                        {.i =  0} },
+  { ShiftMask,               XK_Print,       printscreen,                          {.i =  0} },
+  { ShiftMask,               XK_Page_Up,     kscrollup,                            {.i = -1} },
+  { ShiftMask,               XK_Page_Down,   kscrolldown,                          {.i = -1} },
+  { ShiftMask,               XK_Insert,      clippaste,                            {.i =  0} },
+
+  { MODKEY | ShiftMask,      XK_C,           clipcopy,                             {.i =  0} },
+  { MODKEY | ShiftMask,      XK_V,           clippaste,                            {.i =  0} },
+  { ControlMask | ShiftMask, XK_U,           iso14755,                             {.i =  0} },
 
 };
 
@@ -383,6 +380,7 @@ static Key key[] = {
   { XK_KP_Delete,     ShiftMask,      "\033[2K",      -1,    0},
   { XK_KP_Delete,     ShiftMask,      "\033[3;2~",    +1,    0},
   { XK_KP_Delete,     XK_ANY_MOD,     "\033[3~",      -1,    0},
+  { XK_KP_Delete,     XK_ANY_MOD,     "\033[3~",      +1,    0},
   { XK_KP_Multiply,   XK_ANY_MOD,     "\033Oj",       +2,    0},
   { XK_KP_Add,        XK_ANY_MOD,     "\033Ok",       +2,    0},
   { XK_KP_Enter,      XK_ANY_MOD,     "\033OM",       +2,    0},
@@ -450,6 +448,7 @@ static Key key[] = {
   { XK_Delete,        ShiftMask,      "\033[2K",      -1,    0},
   { XK_Delete,        ShiftMask,      "\033[3;2~",    +1,    0},
   { XK_Delete,        XK_ANY_MOD,     "\033[3~",      -1,    0},
+  { XK_Delete,        XK_ANY_MOD,     "\033[3~",      +1,    0},
   { XK_BackSpace,     XK_NO_MOD,      "\177",          0,    0},
   { XK_BackSpace,     Mod1Mask,       "\033\177",      0,    0},
   { XK_Home,          ShiftMask,      "\033[2J",       0,   -1},
